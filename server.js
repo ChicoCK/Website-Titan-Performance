@@ -121,15 +121,14 @@ app.post('/api/capture-order', async (req, res) => {
                 }]
             };
 
-            const discordRes = await fetch(DISCORD_WEBHOOK_URL, {
+            await fetch(DISCORD_WEBHOOK_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'TitanPerformanceBot/1.0'
+                },
                 body: JSON.stringify(discordPayload)
             });
-
-            if (!discordRes.ok) {
-                console.error("Eroare trimitere webhook PayPal:", await discordRes.text());
-            }
 
             res.json({ success: true, licenseKey: assignedKey, loaderUrl: loaderLink });
         } else {
@@ -169,14 +168,17 @@ app.post('/api/paysafe-order', async (req, res) => {
 
         const webhookRes = await fetch(DISCORD_WEBHOOK_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'User-Agent': 'TitanPerformanceBot/1.0'
+            },
             body: JSON.stringify(discordPayload)
         });
 
         if (!webhookRes.ok) {
             const errorText = await webhookRes.text();
             console.error("Eroare trimitere Discord Webhook Paysafe:", errorText);
-            return res.status(500).json({ success: false, message: "Eroare la trimiterea Notificării pe Discord." });
+            return res.status(500).json({ success: false, message: "Discord a restricționat momentan cererea (Rate Limit 1015). Te rugăm să încerci din nou în 2-3 minute." });
         }
 
         res.json({ success: true });
