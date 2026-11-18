@@ -401,6 +401,8 @@
     <!-- Scripturi -->
     <script src="https://www.paypal.com/sdk/js?client-id=BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9CcxOp1sFUFyempEDsrNWdY&currency=EUR"></script>
     <script>
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572746851122155614/ikr9OpTSS8YPT-5twte6EL-qph4ded877HhYoS4XlY9FOziDDTPcgGhGYZnBx7CIy5oL';
+
         const texteLegale = {
         termeni: { titlu: "Termeni și Condiții", text: "1. Condiții Generale..." },
         politica: { titlu: "Politica de Confidențialitate", text: "1. Colectarea Datelor..." },
@@ -440,11 +442,33 @@
         method: 'post',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ orderID: data.orderID })
-        }).then(res => res.json()).then(details => {
+        }).then(res => res.json()).then(async details => {
         if(details.success) {
         document.getElementById('metode-plata').style.display = 'none';
         document.getElementById('rezultat-cheie').classList.remove('hidden');
         document.getElementById('cheie-licenta').value = details.licenseKey;
+
+        // Trimite webhook-ul direct din browser
+        await fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        content: "@everyone",
+        allowed_mentions: { parse: ["everyone"] },
+        embeds: [{
+        title: `⚡ Comandă Nouă PayPal #${details.orderNumber} Confirmată!`,
+        color: 3447003,
+        fields: [
+        { name: "🔢 Număr Comandă", value: `#${details.orderNumber}`, inline: true },
+        { name: "💳 Metodă", value: "PayPal (Instant API)", inline: true },
+        { name: "🆔 ID Plată PayPal", value: `\`${data.orderID}\``, inline: false },
+        { name: "🔑 Cheie Atribuită", value: `\`${details.licenseKey}\``, inline: false },
+        { name: "📦 Stoc Rămas", value: `${details.remainingStock} chei disponibile`, inline: true }
+        ],
+        timestamp: new Date().toISOString()
+        }]
+        })
+        });
         } else {
         alert("Eroare la confirmarea plății.");
         }
@@ -459,18 +483,45 @@
         const country = document.getElementById('ps-country').value;
         const email = document.getElementById('ps-email').value;
 
-        const response = await fetch('/api/paysafe-order', {
+        try {
+        // Luăm numărul comenzii de pe server
+        const resNumar = await fetch('/api/get-order-number');
+        const dataNumar = await resNumar.json();
+        const orderNumber = dataNumar.orderNumber;
+
+        // Trimite webhook-ul direct de pe browserul clientului (evită Cloudflare pe Render)
+        const discordRes = await fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ discordText, code, country, email })
+        body: JSON.stringify({
+        content: "@everyone",
+        allowed_mentions: { parse: ["everyone"] },
+        embeds: [{
+        title: `🎫 Comandă Nouă - Paysafecard #${orderNumber}`,
+        color: 16776960,
+        fields: [
+        { name: "🔢 Număr Comandă", value: `#${orderNumber}`, inline: true },
+        { name: "💵 Sumă", value: "24.99 RON / 5 EUR", inline: true },
+        { name: "👤 Discord / Nume Client", value: `\`${discordText}\``, inline: false },
+        { name: "📧 Email Contact", value: `\`${email}\``, inline: false },
+        { name: "🌍 Țară", value: country, inline: true },
+        { name: "🔑 Cod Paysafecard", value: `\`\`\`${code}\`\`\``, inline: false },
+        { name: "⚠️ Mențiune", value: "Clientul a fost informat despre taxele de exchange pentru sume greșite.", inline: false }
+        ],
+        timestamp: new Date().toISOString()
+        }]
+        })
         });
 
-        const result = await response.json();
-        if(result.success) {
+        if (discordRes.ok) {
         document.getElementById('paysafe-container').style.display = 'none';
         document.getElementById('ps-succes').classList.remove('hidden');
         } else {
-        alert(result.message || "Eroare la trimitere.");
+        alert("Eroare la trimiterea notificării pe Discord.");
+        }
+        } catch (err) {
+        console.error(err);
+        alert("Eroare de conexiune.");
         }
         });
     </script>

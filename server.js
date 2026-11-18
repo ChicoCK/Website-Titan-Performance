@@ -14,9 +14,6 @@ const CLIENT_ID = 'BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9C
 const SECRET_KEY = 'EM-Kcb56gIAj3ouO27BJR5sRz73HhJRhm2E-p4kmG8weNfhYFQz2-0ZC_OuOf0Pd2FTWePyFKEDK6JBb';
 const PAYPAL_BASE = 'https://api-m.sandbox.paypal.com';
 
-// NOUUL TĂU WEBHOOK DISCORD
-const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572746851122155614/ikr9OpTSS8YPT-5twte6EL-qph4ded877HhYoS4XlY9FOziDDTPcgGhGYZnBx7CIy5oL';
-
 // Funcție helper pentru numărătoarea comenzilor (de la 1 în sus)
 function obtineUrmatorulNumarComanda() {
     const counterPath = path.join(__dirname, 'counter.json');
@@ -34,6 +31,12 @@ function obtineUrmatorulNumarComanda() {
     fs.writeFileSync(counterPath, JSON.stringify(counterData, null, 2));
     return counterData.currentOrder;
 }
+
+// Ruta pentru numărul de comandă nou (folosită la PayPal și Paysafe)
+app.get('/api/get-order-number', (req, res) => {
+    const orderNumber = obtineUrmatorulNumarComanda();
+    res.json({ orderNumber });
+});
 
 // --- PAYPAL TOKEN & ORDERS ---
 async function getPayPalAccessToken() {
@@ -104,87 +107,13 @@ app.post('/api/capture-order', async (req, res) => {
 
             const loaderLink = "https://titanperformance.xyz/download/loader.exe";
 
-            const discordPayload = {
-                content: "@everyone",
-                allowed_mentions: { parse: ["everyone"] },
-                embeds: [{
-                    title: `⚡ Comandă Nouă PayPal #${orderNumber} Confirmată!`,
-                    color: 3447003,
-                    fields: [
-                        { name: "🔢 Număr Comandă", value: `#${orderNumber}`, inline: true },
-                        { name: "💳 Metodă", value: "PayPal (Instant API)", inline: true },
-                        { name: "🆔 ID Plată PayPal", value: `\`${orderID}\``, inline: false },
-                        { name: "🔑 Cheie Atribuită", value: `\`${assignedKey}\``, inline: false },
-                        { name: "📦 Stoc Rămas", value: `${keysData.available.length} chei disponibile`, inline: true }
-                    ],
-                    timestamp: new Date().toISOString()
-                }]
-            };
-
-            await fetch(DISCORD_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'User-Agent': 'TitanPerformanceBot/1.0'
-                },
-                body: JSON.stringify(discordPayload)
-            });
-
-            res.json({ success: true, licenseKey: assignedKey, loaderUrl: loaderLink });
+            res.json({ success: true, licenseKey: assignedKey, loaderUrl: loaderLink, orderNumber, remainingStock: keysData.available.length });
         } else {
             res.json({ success: false, message: "Plata nu a fost finalizată." });
         }
     } catch (error) {
         console.error("Eroare la capturarea plății:", error);
         res.status(500).json({ error: "Eroare la capturarea plății" });
-    }
-});
-
-// --- PAYSAFE ORDER & DISCORD WEBHOOK ---
-app.post('/api/paysafe-order', async (req, res) => {
-    const { code, country, email, discordText } = req.body;
-
-    try {
-        const orderNumber = obtineUrmatorulNumarComanda();
-
-        const discordPayload = {
-            content: "@everyone",
-            allowed_mentions: { parse: ["everyone"] },
-            embeds: [{
-                title: `🎫 Comandă Nouă - Paysafecard #${orderNumber}`,
-                color: 16776960,
-                fields: [
-                    { name: "🔢 Număr Comandă", value: `#${orderNumber}`, inline: true },
-                    { name: "💵 Sumă", value: "24.99 RON / 5 EUR", inline: true },
-                    { name: "👤 Discord / Nume Client", value: `\`${discordText || 'Nespecificat'}\``, inline: false },
-                    { name: "📧 Email Contact", value: `\`${email}\``, inline: false },
-                    { name: "🌍 Țară", value: country, inline: true },
-                    { name: "🔑 Cod Paysafecard", value: `\`\`\`${code}\`\`\``, inline: false },
-                    { name: "⚠️ Mențiune", value: "Clientul a fost informat despre taxele de exchange pentru sume greșite.", inline: false }
-                ],
-                timestamp: new Date().toISOString()
-            }]
-        };
-
-        const webhookRes = await fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'User-Agent': 'TitanPerformanceBot/1.0'
-            },
-            body: JSON.stringify(discordPayload)
-        });
-
-        if (!webhookRes.ok) {
-            const errorText = await webhookRes.text();
-            console.error("Eroare trimitere Discord Webhook Paysafe:", errorText);
-            return res.status(500).json({ success: false, message: "Eroare la trimiterea Notificării pe Discord." });
-        }
-
-        res.json({ success: true });
-    } catch (error) {
-        console.error("Eroare internă server paysafe:", error);
-        res.status(500).json({ success: false, message: "Eroare internă server." });
     }
 });
 
