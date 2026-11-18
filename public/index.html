@@ -2,7 +2,7 @@
 <html lang="ro" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Titan Performance | Ultimate PC Optimizer & Tweaks</title>
     <!-- Favicon cu logo-ul tău de pe Imgur -->
     <link rel="icon" type="image/png" href="https://imgur.com/umHvBwN.png">
@@ -23,12 +23,21 @@
         }
     </script>
     <style>
+        /* Resetări generale pentru a preveni overflow-ul orizontal pe mobil */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             background-color: #020617;
             color: #f3f4f6;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            overflow-x: hidden;
+            overflow-x: hidden !important;
+            width: 100%;
+            position: relative;
             text-rendering: optimizeSpeed;
+            margin: 0;
+            padding: 0;
         }
 
         .live-bg-container {
@@ -104,13 +113,38 @@
                 transform: translateY(-2px);
             }
 
-        /* Ascundem butoanele suplimentare generate de PayPal (cum ar fi cardul nativ) */
+        /* Ascundem butoanele suplimentare generate de PayPal */
         .paypal-button-row[id*="card"] {
             display: none !important;
         }
+
+        /* REZOLVARE SUPRAPUNERE MOBIL HEADER */
+        @media (max-width: 768px) {
+            header .max-w-7xl {
+                flex-direction: column;
+                height: auto !important;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                gap: 12px;
+            }
+
+            header .flex.items-center.space-x-3:last-child {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            header a {
+                height: 38px !important;
+                padding-left: 14px !important;
+                padding-right: 14px !important;
+                font-size: 0.8rem !important;
+            }
+        }
     </style>
 </head>
-<body class="bg-darkBg text-gray-100 antialiased selection:bg-blue-600 selection:text-white relative">
+<body class="bg-darkBg text-gray-100 antialiased selection:bg-blue-600 selection:text-white relative overflow-x-hidden">
 
     <div class="live-bg-container">
         <div class="blob-live-1"></div>
@@ -118,11 +152,11 @@
     </div>
 
     <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkBg/80 border-b border-blue-900/30">
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkBg/80 border-b border-blue-900/30 w-full overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <img src="https://imgur.com/umHvBwN.png" alt="Titan Performance Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/40 border border-blue-400/50">
-                <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-white via-blue-200 to-cyan-400 bg-clip-text text-transparent">
+                <span class="text-base sm:text-xl font-extrabold tracking-wider bg-gradient-to-r from-white via-blue-200 to-cyan-400 bg-clip-text text-transparent">
                     TITAN PERFORMANCE
                 </span>
             </div>
@@ -139,55 +173,55 @@
     </header>
 
     <!-- 1. Hero Section -->
-    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold mb-8 backdrop-blur-md">
+    <section class="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+        <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold mb-6 backdrop-blur-md">
             <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
             <span>TEHNOLOGIE AVANSATĂ DE OPTIMIZARE HARDWARE & KERNEL</span>
         </div>
 
-        <h1 class="text-4xl sm:text-7xl font-black tracking-tight max-w-5xl mx-auto uppercase leading-none mb-6">
+        <h1 class="text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight max-w-5xl mx-auto uppercase leading-tight mb-6">
             Eliberează puterea absolută a <span class="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">PC-ului tău.</span>
         </h1>
-        <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+        <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             Sistemul tău de operare este încărcat cu procese inutile care îți sabotează framerate-ul. Titan Performance rescrie parametrii de sistem pentru a-ți oferi performanță pură în jocuri și aplicații.
         </p>
     </section>
 
     <!-- 2. Secțiunea: Așa arată aplicația -->
-    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
-        <h2 class="text-3xl sm:text-4xl font-extrabold uppercase mb-3 text-white">Interfață nativă și intuitivă.</h2>
-        <p class="text-gray-400 text-sm mb-10">Design minimalist conceput pentru control total în doar câteva clickuri.</p>
-        <div class="bg-cardBg/90 border border-blue-900/50 rounded-2xl p-2.5 liquid-glow shadow-2xl overflow-hidden backdrop-blur-md">
+    <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+        <h2 class="text-2xl sm:text-4xl font-extrabold uppercase mb-3 text-white">Interfață nativă și intuitivă.</h2>
+        <p class="text-gray-400 text-xs sm:text-sm mb-8">Design minimalist conceput pentru control total în doar câteva clickuri.</p>
+        <div class="bg-cardBg/90 border border-blue-900/50 rounded-2xl p-2 liquid-glow shadow-2xl overflow-hidden backdrop-blur-md">
             <img src="https://imgur.com/qZuL70y.png" alt="Titan Performance App" class="w-full h-auto rounded-xl border border-blue-900/40 shadow-inner">
         </div>
     </section>
 
     <!-- 3. Secțiunea: Cum funcționează -->
-    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
-        <h2 class="text-3xl sm:text-4xl font-extrabold uppercase mb-12 text-white">Cum transformăm performanța ta?</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+    <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+        <h2 class="text-2xl sm:text-4xl font-extrabold uppercase mb-10 text-white">Cum transformăm performanța ta?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 relative card-glow">
                 <div class="text-4xl font-black text-blue-500/20 mb-2">01</div>
-                <h3 class="text-lg font-bold text-blue-400 mb-2">Diagnostic Inteligent</h3>
+                <h3 class="text-base sm:text-lg font-bold text-blue-400 mb-2">Diagnostic Inteligent</h3>
                 <p class="text-xs text-gray-400 leading-relaxed">Software-ul scanează arhitectura componentelor tale, identificând blocajele ascunse din registri și setările implicite ineficiente ale Windows-ului.</p>
             </div>
             <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 relative card-glow">
                 <div class="text-4xl font-black text-blue-500/20 mb-2">02</div>
-                <h3 class="text-lg font-bold text-blue-400 mb-2">Tweaks la Nivel de Kernel</h3>
+                <h3 class="text-base sm:text-lg font-bold text-blue-400 mb-2">Tweaks la Nivel de Kernel</h3>
                 <p class="text-xs text-gray-400 leading-relaxed">Aplicăm peste 50 de optimizări avansate pentru prioritizarea plăcii video, reducerea latenței de rețea și accelerarea timpilor de răspuns.</p>
             </div>
             <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 relative card-glow">
                 <div class="text-4xl font-black text-blue-500/20 mb-2">03</div>
-                <h3 class="text-lg font-bold text-blue-400 mb-2">Stabilitate pe termen lung</h3>
+                <h3 class="text-base sm:text-lg font-bold text-blue-400 mb-2">Stabilitate pe termen lung</h3>
                 <p class="text-xs text-gray-400 leading-relaxed">Sistemul tău rămâne optimizat chiar și după update-urile majore aduse de Windows, asigurând o experiență de gaming constant fluentă.</p>
             </div>
         </div>
     </section>
 
     <!-- 4. Secțiunea: Ce spun clienții -->
-    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
-        <h2 class="text-3xl sm:text-4xl font-extrabold uppercase mb-2 text-white">Recenzii verificate.</h2>
-        <p class="text-gray-400 text-sm mb-12">Ce spun utilizatorii care și-au transformat PC-ul cu Titan Performance.</p>
+    <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+        <h2 class="text-2xl sm:text-4xl font-extrabold uppercase mb-2 text-white">Recenzii verificate.</h2>
+        <p class="text-gray-400 text-xs sm:text-sm mb-10">Ce spun utilizatorii care și-au transformat PC-ul cu Titan Performance.</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 card-glow">
                 <span class="px-2.5 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-bold rounded-full">VERIFIED BUYER</span>
@@ -208,19 +242,19 @@
     </section>
 
     <!-- 5. Pachetul meu (Checkout Section) -->
-    <section id="pachete" class="py-16 px-4 sm:px-6 lg:px-8 max-w-lg mx-auto text-center">
-        <div class="bg-cardBg/95 backdrop-blur-md border border-blue-500/60 rounded-3xl p-8 liquid-glow w-full text-center relative shadow-2xl">
-            <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+    <section id="pachete" class="py-12 px-4 sm:px-6 lg:px-8 max-w-lg mx-auto text-center">
+        <div class="bg-cardBg/95 backdrop-blur-md border border-blue-500/60 rounded-3xl p-6 sm:p-8 liquid-glow w-full text-center relative shadow-2xl">
+            <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md whitespace-nowrap">
                 ⚡ PACHET LIFETIME · PLATĂ UNICĂ
             </div>
 
             <div class="mt-4 mb-2">
-                <h3 class="text-2xl font-black text-white uppercase tracking-wide">Titan Performance</h3>
+                <h3 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide">Titan Performance</h3>
                 <p class="text-xs text-gray-400 mt-1">Soluția definitivă pentru eliminarea lag-ului și maximizarea performanței.</p>
             </div>
 
             <div class="my-6 py-4 border-y border-blue-900/40 bg-blue-950/20 rounded-2xl">
-                <div class="text-4xl font-black text-white">5.00 <span class="text-blue-400 text-2xl">EUR</span> <span class="text-lg text-gray-400 font-normal">/ 24.99 RON</span></div>
+                <div class="text-3xl sm:text-4xl font-black text-white">5.00 <span class="text-blue-400 text-xl sm:text-2xl">EUR</span> <span class="text-sm sm:text-lg text-gray-400 font-normal">/ 24.99 RON</span></div>
                 <p class="text-[11px] text-cyan-400 mt-1 font-semibold uppercase tracking-wider">Fără abonamente lunare · Acces pe viață</p>
             </div>
 
@@ -321,7 +355,7 @@
     </section>
 
     <!-- 6. Footer Profesionist -->
-    <footer class="border-t border-blue-900/30 mt-20 bg-darkBg text-gray-400 text-xs">
+    <footer class="border-t border-blue-900/30 mt-20 bg-darkBg text-gray-400 text-xs overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="space-y-3">
                 <span class="text-white font-bold tracking-wider text-sm">TITAN PERFORMANCE</span>
