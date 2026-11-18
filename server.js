@@ -41,35 +41,37 @@ function obtineUrmatorulNumarComanda() {
 }
 
 // --- RUTĂ DISCORD OAUTH2 ---
-app.get('/auth/discord', (req, res) => {
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify`;
-    res.redirect(discordAuthUrl);
-});
-
 app.get('/auth/discord/callback', async (req, res) => {
     const code = req.query.code;
-    if (!code) return res.status(400).send('Eroare la autentificarea Discord.');
+    if (!code) return res.status(400).send('Eroare la autentificarea Discord: Cod lipsă.');
 
     try {
+        const tokenParams = new URLSearchParams({
+            client_id: DISCORD_CLIENT_ID,
+            client_secret: DISCORD_CLIENT_SECRET,
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: REDIRECT_URI,
+        });
+
         const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
             method: 'POST',
-            body: new URLSearchParams({
-                client_id: DISCORD_CLIENT_ID,
-                client_secret: DISCORD_CLIENT_SECRET,
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: REDIRECT_URI,
-            }),
+            body: tokenParams,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
+
         const tokenData = await tokenRes.json();
+
+        if (!tokenRes.ok) {
+            console.error("Eroare detaliată Discord Token:", tokenData);
+            return res.status(500).send(`Eroare Discord API: ${JSON.stringify(tokenData)}`);
+        }
 
         const userRes = await fetch('https://discord.com/api/users/@me', {
             headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
         });
         const userData = await userRes.json();
 
-        // Salvăm datele utilizatorului într-un cookie securizat temporar
         res.cookie('discord_user', JSON.stringify({
             username: userData.username,
             id: userData.id
@@ -77,8 +79,8 @@ app.get('/auth/discord/callback', async (req, res) => {
 
         res.redirect('/?discord_autentificat=true#pachete');
     } catch (err) {
-        console.error("Eroare Discord OAuth:", err);
-        res.status(500).send("Eroare la conectarea cu Discord.");
+        console.error("Eroare completă Discord OAuth:", err);
+        res.status(500).send("Eroare la conectarea cu Discord: " + err.message);
     }
 });
 
