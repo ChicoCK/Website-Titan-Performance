@@ -14,8 +14,8 @@ const CLIENT_ID = 'BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9C
 const SECRET_KEY = 'EM-Kcb56gIAj3ouO27BJR5sRz73HhJRhm2E-p4kmG8weNfhYFQz2-0ZC_OuOf0Pd2FTWePyFKEDK6JBb';
 const PAYPAL_BASE = 'https://api-m.sandbox.paypal.com';
 
-// WEBHOOK-UL TĂU UNIC (WEBSITE LOGS)
-const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572719929952567437/vtj9SZtYKXKD_elvHnvJilFfO_Rm9NG-XzTiKqup3LfwzEqd2fKNyOQUoQPsp9jO8M7Q';
+// NOUUL TĂU WEBHOOK DISCORD
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572746851122155614/ikr9OpTSS8YPT-5twte6EL-qph4ded877HhYoS4XlY9FOziDDTPcgGhGYZnBx7CIy5oL';
 
 // Funcție helper pentru numărătoarea comenzilor (de la 1 în sus)
 function obtineUrmatorulNumarComanda() {
@@ -178,7 +178,7 @@ app.post('/api/paysafe-order', async (req, res) => {
         if (!webhookRes.ok) {
             const errorText = await webhookRes.text();
             console.error("Eroare trimitere Discord Webhook Paysafe:", errorText);
-            return res.status(500).json({ success: false, message: "Discord a restricționat momentan cererea (Rate Limit 1015). Te rugăm să încerci din nou în 2-3 minute." });
+            return res.status(500).json({ success: false, message: "Eroare la trimiterea Notificării pe Discord." });
         }
 
         res.json({ success: true });
