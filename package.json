@@ -1,0 +1,12 @@
+{
+  "name": "website-tp",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^5.3.0",
+    "node-fetch": "^3.3.2"
+  }
+}

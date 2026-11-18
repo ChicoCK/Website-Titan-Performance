@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ro" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titan Performance | Ultimate PC Optimizer & Tweaks</title>
+    <!-- Favicon cu logo-ul tău de pe Imgur -->
+    <link rel="icon" type="image/png" href="https://imgur.com/umHvBwN.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+        darkMode: 'class',
+        theme: {
+        extend: {
+        colors: {
+        darkBg: '#020617',
+        cardBg: '#090d16',
+        accentBlue: '#2563eb',
+        accentCyan: '#06b6d4',
+        }
+        }
+        }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020617;
+            color: #f3f4f6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow-x: hidden;
+            text-rendering: optimizeSpeed;
+        }
+
+        .live-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+            transform: translateZ(0);
+        }
+
+        .blob-live-1, .blob-live-2 {
+            position: absolute;
+            border-radius: 50%;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .blob-live-1 {
+            top: -5%;
+            left: 15vw;
+            width: 400px;
+            height: 400px;
+            background: rgba(37, 99, 235, 0.22);
+            filter: blur(90px);
+            animation: moveBlob1 10s ease-in-out infinite alternate;
+        }
+
+        .blob-live-2 {
+            top: 35%;
+            right: 10vw;
+            width: 450px;
+            height: 450px;
+            background: rgba(6, 182, 212, 0.15);
+            filter: blur(100px);
+            animation: moveBlob2 14s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes moveBlob1 {
+            0% {
+                transform: translate(0px, 0px) translateZ(0);
+            }
+
+            100% {
+                transform: translate(40px, 50px) translateZ(0);
+            }
+        }
+
+        @keyframes moveBlob2 {
+            0% {
+                transform: translate(0px, 0px) translateZ(0);
+            }
+
+            100% {
+                transform: translate(-50px, -40px) translateZ(0);
+            }
+        }
+
+        .liquid-glow {
+            box-shadow: 0 0 40px -10px rgba(37, 99, 235, 0.3);
+        }
+
+        .card-glow {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+            .card-glow:hover {
+                border-color: rgba(59, 130, 246, 0.7);
+                box-shadow: 0 0 25px rgba(37, 99, 235, 0.2);
+                transform: translateY(-2px);
+            }
+
+        /* Ascundem butoanele suplimentare generate de PayPal (cum ar fi cardul nativ) */
+        .paypal-button-row[id*="card"] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-gray-100 antialiased selection:bg-blue-600 selection:text-white relative">
+
+    <div class="live-bg-container">
+        <div class="blob-live-1"></div>
+        <div class="blob-live-2"></div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkBg/80 border-b border-blue-900/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="https://imgur.com/umHvBwN.png" alt="Titan Performance Logo" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/40 border border-blue-400/50">
+                <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-white via-blue-200 to-cyan-400 bg-clip-text text-transparent">
+                    TITAN PERFORMANCE
+                </span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="https://discord.gg/rHsTJvC4DT" target="_blank" class="h-11 px-5 rounded-xl bg-[#5865F2]/20 hover:bg-[#5865F2]/30 border border-[#5865F2]/50 text-indigo-200 font-semibold transition-all flex items-center justify-center gap-2 text-sm shadow-md">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
+                    <span>Discord</span>
+                </a>
+                <a href="#pachete" class="h-11 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all flex items-center justify-center shadow-lg shadow-blue-600/30 text-sm">
+                    Cumpără Acum
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+        <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold mb-8 backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            <span>TEHNOLOGIE AVANSATĂ DE OPTIMIZARE HARDWARE & KERNEL</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-7xl font-black tracking-tight max-w-5xl mx-auto uppercase leading-none mb-6">
+            Eliberează puterea absolută a <span class="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">PC-ului tău.</span>
+        </h1>
+        <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            Sistemul tău de operare este încărcat cu procese inutile care îți sabotează framerate-ul. Titan Performance rescrie parametrii de sistem pentru a-ți oferi performanță pură în jocuri și aplicații.
+        </p>
+    </section>
+
+    <!-- 2. Secțiunea: Așa arată aplicația -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+        <h2 class="text-3xl sm:text-4xl font-extrabold uppercase mb-3 text-white">Interfață nativă și intuitivă.</h2>
+        <p class="text-gray-400 text-sm mb-10">Design minimalist conceput pentru control total în doar câteva clickuri.</p>
+        <div class="bg-cardBg/90 border border-blue-900/50 rounded-2xl p-2.5 liquid-glow shadow-2xl overflow-hidden backdrop-blur-md">
+            <img src="https://imgur.com/qZuL70y.png" alt="Titan Performance App" class="w-full h-auto rounded-xl border border-blue-900/40 shadow-inner">
+        </div>
+    </section>
+
+    <!-- 3. Secțiunea: Cum funcționează -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+        <h2 class="text-3xl sm:text-4xl font-extrabold uppercase mb-12 text-white">Cum transformăm performanța ta?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 relative card-glow">
+                <div class="text-4xl font-black text-blue-500/20 mb-2">01</div>
+                <h3 class="text-lg font-bold text-blue-400 mb-2">Diagnostic Inteligent</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">Software-ul scanează arhitectura componentelor tale, identificând blocajele ascunse din registri și setările implicite ineficiente ale Windows-ului.</p>
+            </div>
+            <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 relative card-glow">
+                <div class="text-4xl font-black text-blue-500/20 mb-2">02</div>
+                <h3 class="text-lg font-bold text-blue-400 mb-2">Tweaks la Nivel de Kernel</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">Aplicăm peste 50 de optimizări avansate pentru prioritizarea plăcii video, reducerea latenței de rețea și accelerarea timpilor de răspuns.</p>
+            </div>
+            <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 relative card-glow">
+                <div class="text-4xl font-black text-blue-500/20 mb-2">03</div>
+                <h3 class="text-lg font-bold text-blue-400 mb-2">Stabilitate pe termen lung</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">Sistemul tău rămâne optimizat chiar și după update-urile majore aduse de Windows, asigurând o experiență de gaming constant fluentă.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Secțiunea: Ce spun clienții -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+        <h2 class="text-3xl sm:text-4xl font-extrabold uppercase mb-2 text-white">Recenzii verificate.</h2>
+        <p class="text-gray-400 text-sm mb-12">Ce spun utilizatorii care și-au transformat PC-ul cu Titan Performance.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 card-glow">
+                <span class="px-2.5 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-bold rounded-full">VERIFIED BUYER</span>
+                <p class="text-xs text-gray-300 mt-4 mb-4 italic leading-relaxed">"Aveam probleme mari cu micro-stuttering-ul în CS2. După ce am rulat optimizările din aplicație, jocul se simte incredibil de fluid și am câștigat în jur de 70 FPS stabil."</p>
+                <div class="text-xs font-bold text-white">Andrei P. <span class="text-gray-500 font-normal">· CS2 Player</span></div>
+            </div>
+            <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 card-glow">
+                <span class="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold rounded-full">VERIFIED BUYER</span>
+                <p class="text-xs text-gray-300 mt-4 mb-4 italic leading-relaxed">"În FiveM aveam lag constant în orașele populate. Cu setările aplicate de aici, am scăpat de drop-uri și acum rulez totul la peste 90 FPS fără nicio problemă."</p>
+                <div class="text-xs font-bold text-white">Mihai S. <span class="text-gray-500 font-normal">· FiveM Gamer</span></div>
+            </div>
+            <div class="bg-cardBg/90 backdrop-blur-md border border-blue-900/40 rounded-2xl p-6 card-glow">
+                <span class="px-2.5 py-1 bg-blue-600/20 border border-blue-500/30 text-blue-300 text-[10px] font-bold rounded-full">EXPERT USER</span>
+                <p class="text-xs text-gray-300 mt-4 mb-4 italic leading-relaxed">"Un software foarte bine structurat. Curăță tot balastul lăsat de Windows în fundal și eliberează resurse reale pentru placă și procesor. Merită fiecare ban."</p>
+                <div class="text-xs font-bold text-white">Vlad M. <span class="text-gray-500 font-normal">· IT & Gaming</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Pachetul meu (Checkout Section) -->
+    <section id="pachete" class="py-16 px-4 sm:px-6 lg:px-8 max-w-lg mx-auto text-center">
+        <div class="bg-cardBg/95 backdrop-blur-md border border-blue-500/60 rounded-3xl p-8 liquid-glow w-full text-center relative shadow-2xl">
+            <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+                ⚡ PACHET LIFETIME · PLATĂ UNICĂ
+            </div>
+
+            <div class="mt-4 mb-2">
+                <h3 class="text-2xl font-black text-white uppercase tracking-wide">Titan Performance</h3>
+                <p class="text-xs text-gray-400 mt-1">Soluția definitivă pentru eliminarea lag-ului și maximizarea performanței.</p>
+            </div>
+
+            <div class="my-6 py-4 border-y border-blue-900/40 bg-blue-950/20 rounded-2xl">
+                <div class="text-4xl font-black text-white">5.00 <span class="text-blue-400 text-2xl">EUR</span> <span class="text-lg text-gray-400 font-normal">/ 24.99 RON</span></div>
+                <p class="text-[11px] text-cyan-400 mt-1 font-semibold uppercase tracking-wider">Fără abonamente lunare · Acces pe viață</p>
+            </div>
+
+            <!-- Sneak Peek / Ce face aplicația în detaliu -->
+            <div class="text-left text-xs text-gray-300 space-y-3 mb-8 bg-darkBg/70 p-4 rounded-2xl border border-blue-900/30">
+                <p class="font-bold text-blue-400 uppercase tracking-wide text-[11px] mb-2">Ce include licența ta pe viață:</p>
+                <div class="flex items-start gap-2">
+                    <span class="text-blue-400 font-bold">✓</span>
+                    <span><strong>Optimizare Kernel & Registri:</strong> Curăță erorile ascunse și prioritizează componentele hardware.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-blue-400 font-bold">✓</span>
+                    <span><strong>Reparare Automată Windows:</strong> Anulează procesele de fundal care mănâncă RAM și CPU.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-blue-400 font-bold">✓</span>
+                    <span><strong>Boost Latență & Rețea:</strong> Reduce ping-ul în jocuri multiplayer (CS2, FiveM, LoL).</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-blue-400 font-bold">✓</span>
+                    <span><strong>Update-uri Gratuite pe Viață:</strong> Primești automat toate îmbunătățirile viitoare.</span>
+                </div>
+            </div>
+
+            <!-- Butoanele principale de plată -->
+            <div id="metode-plata" class="space-y-3">
+                <!-- Buton PayPal curat -->
+                <div id="paypal-button-container"></div>
+
+                <!-- Linie dreaptă sub butonul PayPal -->
+                <hr class="border-t border-blue-900/50 my-4 w-full">
+
+                <!-- Buton Paysafecard -->
+                <button onclick="arataFormularPaysafe()" class="w-full bg-[#111827] hover:bg-gray-800 border border-blue-500/50 text-white font-semibold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md text-sm">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                    Plătește cu Paysafecard
+                </button>
+            </div>
+
+            <!-- Rezultat Cheie PayPal -->
+            <div id="rezultat-cheie" class="hidden mt-4 p-4 bg-green-950/50 border border-green-500 rounded-xl text-green-300 text-sm">
+                <p class="font-bold mb-1">🎉 Plată Confirmată!</p>
+                <p>Cheia ta de licență:</p>
+                <input type="text" id="cheie-licenta" readonly class="w-full mt-2 bg-black text-white p-2 rounded text-center font-mono text-xs border border-green-700">
+            </div>
+
+            <!-- Formular Paysafe -->
+            <div id="paysafe-container" class="hidden mt-4 text-left transition-all">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-bold text-blue-400">Plată Manuală Paysafecard</span>
+                    <button onclick="inchideFormularPaysafe()" class="text-xs text-gray-400 hover:text-white underline">Înapoi</button>
+                </div>
+
+                <div class="mb-4 p-3 bg-yellow-950/40 border border-yellow-600/50 rounded-xl text-yellow-300 text-xs">
+                    <p class="font-bold mb-1">⚠️ INFO IMPORTANT:</p>
+                    <p class="leading-relaxed">Paysafecard-ul care nu corespunde cu suma produsului își asumă timpul de exchange + taxele pentru returnarea banilor!</p>
+                </div>
+
+                <form id="paysafe-form" class="space-y-3">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Cod Paysafecard (Doar cifre)</label>
+                        <input type="text" id="ps-code" placeholder="1234567890123456" required pattern="[0-9]+" title="Introduceți doar cifre!"
+                               class="w-full bg-darkBg border border-gray-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Țara / Country</label>
+                        <input type="text" id="ps-country" placeholder="Ex: Romania" required
+                               class="w-full bg-darkBg border border-gray-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Email de contact</label>
+                        <input type="email" id="ps-email" placeholder="nume@exemplu.com" required
+                               class="w-full bg-darkBg border border-gray-700 rounded-xl px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Autentificare Discord (Obligatoriu)</label>
+                        <a href="/auth/discord" class="flex items-center justify-center gap-2 w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-semibold py-2.5 rounded-xl transition-all text-xs shadow-md">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
+                            <span id="discord-status-text">Conectează-te cu Discord</span>
+                        </a>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition-all shadow-lg text-sm mt-2">
+                        Trimite Codul spre Verificare
+                    </button>
+                </form>
+            </div>
+
+            <!-- Mesaj Succes Paysafe -->
+            <div id="ps-succes" class="hidden mt-4 p-4 bg-green-950/50 border border-green-500 rounded-xl text-green-300 text-xs text-center space-y-3">
+                <p class="font-bold text-sm">✅ Cod trimis cu succes!</p>
+                <p class="text-gray-300 text-xs">Apăsați butonul de mai jos pentru a intra pe server și a revendica cheia:</p>
+                <a href="https://discord.gg/rHsTJvC4DT" target="_blank" class="flex items-center justify-center gap-2 w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-semibold py-3 rounded-xl transition-all shadow-lg text-xs">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
+                    <span>Deschide un ticket pentru revendicarea cheii</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Footer Profesionist -->
+    <footer class="border-t border-blue-900/30 mt-20 bg-darkBg text-gray-400 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <span class="text-white font-bold tracking-wider text-sm">TITAN PERFORMANCE</span>
+                <p class="text-gray-500 leading-relaxed">Eliberăm potențialul hardware la nivel de milisecundă pentru o experiență de gaming fără compromisuri.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">Navigare</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-blue-400 transition-colors">Aplicație</a></li>
+                    <li><a href="#" class="hover:text-blue-400 transition-colors">Cum funcționează</a></li>
+                    <li><a href="#pachete" class="hover:text-blue-400 transition-colors">Pachet</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">Suport</h4>
+                <ul class="space-y-2">
+                    <li><a href="https://discord.gg/rHsTJvC4DT" target="_blank" class="hover:text-blue-400 transition-colors">Discord Server</a></li>
+                    <li><a href="https://discord.gg/rHsTJvC4DT" target="_blank" class="hover:text-blue-400 transition-colors">Contact / Ticket</a></li>
+                    <li><a href="#" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="deschideModal('termeni')" class="hover:text-blue-400 transition-colors">Termeni și Condiții</a></li>
+                    <li><a href="#" onclick="deschideModal('politica')" class="hover:text-blue-400 transition-colors">Politica de Confidențialitate</a></li>
+                    <li><a href="#" onclick="deschideModal('cookie')" class="hover:text-blue-400 transition-colors">Cookie-uri</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-900 py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-gray-600">© 2026 Titan Performance. Toate drepturile rezervate.</p>
+            <div class="flex items-center space-x-3">
+                <a href="https://anpc.ro/" target="_blank" class="px-3 py-1 bg-gray-900 border border-gray-800 rounded text-[10px] text-gray-400 hover:text-white transition-colors">
+                    ANPC - SAL
+                </a>
+                <a href="https://ec.europa.eu/consumers/odr" target="_blank" class="px-3 py-1 bg-gray-900 border border-gray-800 rounded text-[10px] text-gray-400 hover:text-white transition-colors">
+                    SOL (EU)
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal pentru paginile legale -->
+    <div id="legal-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-cardBg border border-blue-900/50 max-w-lg w-full rounded-2xl p-6 text-left relative max-h-[80vh] overflow-y-auto shadow-2xl">
+            <button onclick="inchideModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-lg">✕</button>
+            <h3 id="modal-title" class="text-base font-bold text-blue-400 mb-3"></h3>
+            <div id="modal-content" class="text-xs text-gray-300 space-y-3 leading-relaxed"></div>
+        </div>
+    </div>
+
+    <!-- Scripturi -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9CcxOp1sFUFyempEDsrNWdY&currency=EUR"></script>
+    <script>
+        const texteLegale = {
+        termeni: {
+        titlu: "Termeni și Condiții Oficiali - Titan Performance",
+        text: "1. Condiții Generale: Prin accesarea site-ului Titan Performance și achiziționarea licențelor software, acceptați în mod expres acești termeni. Utilizarea serviciilor noastre se supune legislației în vigoare.\n\n2. Dreptul de Utilizare: Licența oferită este pe viață, destinată unui singur dispozitiv. Copierea, distribuirea sau modificarea neautorizată a aplicației este strict interzisă și atrage după sine suspendarea imediată a licenței fără rambursare.\n\n3. Livrare și Plăți: Livrarea licențelor se face instant prin sistemul automatizat sau manual în maximum 24 de ore prin tichete pe Discord pentru metodele alternative.\n\n4. Politică de Rambursare: Produsele fiind de natură digitală, plățile sunt finale. Rambursările se analizează doar în cazuri exceptionale de nefuncționare tehnică a cheii."
+        },
+        politica: {
+        titlu: "Politica de Confidențialitate",
+        text: "1. Colectarea Datelor: Colectăm doar adresa de email și datele de profil de pe Discord (username/ID) strict necesare pentru activarea licenței și suport tehnic.\n\n2. Securitate: Datele dumneavoastră sunt în siguranță și nu vor fi niciodată înstrăinate către terți.\n\n3. Ștergerea Datelor: Puteți solicita oricând ștergerea datelor personale printr-un ticket pe serverul nostru de Discord."
+        },
+        cookie: {
+        titlu: "Politica de Cookie-uri",
+        text: "1. Ce sunt Cookie-urile: Fișiere text mici stocate pe dispozitivul dvs. pentru a asigura buna funcționare a sesiunilor de pe site.\n\n2. Utilizare: Folosim cookie-uri esențiale pentru autentificarea prin Discord OAuth2 și funcționarea coșului de cumpărături. Nu folosim cookie-uri invazive de urmărire publicitară."
+        }
+        };
+
+        function deschideModal(tip) {
+        event.preventDefault();
+        const modal = document.getElementById('legal-modal');
+        document.getElementById('modal-title').innerText = texteLegale[tip].titlu;
+        document.getElementById('modal-content').innerHTML = texteLegale[tip].text.replace(/\n/g, '<br>');
+        modal.classList.remove('hidden');
+        }
+
+        function inchideModal() {
+        document.getElementById('legal-modal').classList.add('hidden');
+        }
+
+        function arataFormularPaysafe() {
+        document.getElementById('metode-plata').style.display = 'none';
+        document.getElementById('paysafe-container').classList.remove('hidden');
+        }
+        function inchideFormularPaysafe() {
+        document.getElementById('paysafe-container').classList.add('hidden');
+        document.getElementById('metode-plata').style.display = 'block';
+        }
+
+        paypal.Buttons({
+        createOrder: function(data, actions) {
+        return fetch('/api/create-order', {
+        method: 'post',
+        headers: { 'content-type': 'application/json' }
+        }).then(res => res.json()).then(orderData => orderData.id);
+        },
+        onApprove: function(data, actions) {
+        return fetch('/api/capture-order', {
+        method: 'post',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ orderID: data.orderID })
+        }).then(res => res.json()).then(details => {
+        if(details.success) {
+        document.getElementById('metode-plata').style.display = 'none';
+        document.getElementById('rezultat-cheie').classList.remove('hidden');
+        document.getElementById('cheie-licenta').value = details.licenseKey;
+        } else {
+        alert("Eroare la confirmarea plății.");
+        }
+        });
+        }
+        }).render('#paypal-button-container');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('discord_autentificat') === 'true') {
+        arataFormularPaysafe();
+        const btn = document.querySelector('a[href="/auth/discord"]');
+        btn.innerHTML = "✅ Discord Conectat cu Succes!";
+        btn.classList.remove('bg-[#5865F2]');
+        btn.classList.add('bg-green-600');
+        btn.removeAttribute('href');
+        }
+
+        document.getElementById('paysafe-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const code = document.getElementById('ps-code').value;
+        const country = document.getElementById('ps-country').value;
+        const email = document.getElementById('ps-email').value;
+
+        const response = await fetch('/api/paysafe-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, country, email })
+        });
+
+        const result = await response.json();
+        if(result.success) {
+        document.getElementById('paysafe-container').style.display = 'none';
+        document.getElementById('ps-succes').classList.remove('hidden');
+        } else {
+        alert(result.message || "Eroare la trimitere. Asigură-te că te-ai logat prin Discord!");
+        }
+        });
+    </script>
+</body>
+</html>
