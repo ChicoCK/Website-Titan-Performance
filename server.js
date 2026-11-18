@@ -17,7 +17,7 @@ const PAYPAL_BASE = 'https://api-m.sandbox.paypal.com';
 // DATELE TALE DE LA DISCORD DEVELOPER
 const DISCORD_CLIENT_ID = '1572680905712206016';
 const DISCORD_CLIENT_SECRET = 'xd-LlIh6vZWjDRjOmCyDBwME3P_dZSbS';
-const REDIRECT_URI = 'http://localhost:3000/auth/discord/callback';
+const REDIRECT_URI = 'https://titanperformance.xyz/auth/discord/callback';
 
 // WEBHOOK-UL TĂU PENTRU LOG-URI
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572719929952567437/vtj9SZtYKXKD_elvHnvJilFfO_Rm9NG-XzTiKqup3LfwzEqd2fKNyOQUoQPsp9jO8M7Q';
