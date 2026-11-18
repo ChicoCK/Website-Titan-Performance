@@ -40,7 +40,13 @@ function obtineUrmatorulNumarComanda() {
     return counterData.currentOrder;
 }
 
-// --- RUTĂ DISCORD OAUTH2 ---
+// --- RUTĂ DISCORD OAUTH2 (INIȚIALIZARE) ---
+app.get('/auth/discord', (req, res) => {
+    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify`;
+    res.redirect(discordAuthUrl);
+});
+
+// --- RUTĂ DISCORD OAUTH2 (CALLBACK) ---
 app.get('/auth/discord/callback', async (req, res) => {
     const code = req.query.code;
     if (!code) return res.status(400).send('Eroare la autentificarea Discord: Cod lipsă.');
