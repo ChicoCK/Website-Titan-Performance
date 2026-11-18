@@ -14,11 +14,6 @@ const CLIENT_ID = 'BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9C
 const SECRET_KEY = 'EM-Kcb56gIAj3ouO27BJR5sRz73HhJRhm2E-p4kmG8weNfhYFQz2-0ZC_OuOf0Pd2FTWePyFKEDK6JBb';
 const PAYPAL_BASE = 'https://api-m.sandbox.paypal.com';
 
-// DATELE TALE DE LA DISCORD DEVELOPER
-const DISCORD_CLIENT_ID = '1572680905712206016';
-const DISCORD_CLIENT_SECRET = 'xd-LlIh6vZWjDRjOmCyDBwME3P_dZSbS';
-const REDIRECT_URI = 'https://titanperformance.xyz/auth/discord/callback';
-
 // WEBHOOK-UL TĂU PENTRU LOG-URI
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572719929952567437/vtj9SZtYKXKD_elvHnvJilFfO_Rm9NG-XzTiKqup3LfwzEqd2fKNyOQUoQPsp9jO8M7Q';
 
@@ -39,61 +34,6 @@ function obtineUrmatorulNumarComanda() {
     fs.writeFileSync(counterPath, JSON.stringify(counterData, null, 2));
     return counterData.currentOrder;
 }
-
-// --- RUTĂ DISCORD OAUTH2 (INIȚIALIZARE) ---
-app.get('/auth/discord', (req, res) => {
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify`;
-    res.redirect(discordAuthUrl);
-});
-
-// --- RUTĂ DISCORD OAUTH2 (CALLBACK) ---
-app.get('/auth/discord/callback', async (req, res) => {
-    const code = req.query.code;
-    if (!code) return res.status(400).send('Eroare la autentificarea Discord: Cod lipsă.');
-
-    try {
-        const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
-            method: 'POST',
-            body: new URLSearchParams({
-                client_id: DISCORD_CLIENT_ID,
-                client_secret: DISCORD_CLIENT_SECRET,
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: REDIRECT_URI,
-            }),
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-
-        const rawText = await tokenRes.text();
-        let tokenData;
-        try {
-            tokenData = JSON.parse(rawText);
-        } catch (e) {
-            console.error("Răspuns necunoscut de la Discord (nu e JSON):", rawText);
-            return res.status(500).send(`Eroare de la Discord (Răspuns invalid): <pre>${rawText}</pre>`);
-        }
-
-        if (!tokenRes.ok) {
-            console.error("Eroare Discord Token API:", tokenData);
-            return res.status(500).send(`Eroare Discord API: ${JSON.stringify(tokenData, null, 2)}`);
-        }
-
-        const userRes = await fetch('https://discord.com/api/users/@me', {
-            headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
-        });
-        const userData = await userRes.json();
-
-        res.cookie('discord_user', JSON.stringify({
-            username: userData.username,
-            id: userData.id
-        }), { httpOnly: true });
-
-        res.redirect('/?discord_autentificat=true#pachete');
-    } catch (err) {
-        console.error("Eroare completă Discord OAuth:", err);
-        res.status(500).send("Eroare la conectarea cu Discord: " + err.message);
-    }
-});
 
 // --- PAYPAL TOKEN & ORDERS ---
 async function getPayPalAccessToken() {
@@ -195,16 +135,9 @@ app.post('/api/capture-order', async (req, res) => {
     }
 });
 
-// --- PAYSAFE ORDER & DISCORD WEBHOOK ---
+// --- PAYSAFE ORDER & DISCORD WEBHOOK (CU TEXT LIBER) ---
 app.post('/api/paysafe-order', async (req, res) => {
-    const { code, country, email } = req.body;
-    const discordCookie = req.cookies.discord_user;
-
-    if (!discordCookie) {
-        return res.json({ success: false, message: "Te rugăm să te autentifici mai întâi prin butonul de Discord!" });
-    }
-
-    const discordUser = JSON.parse(discordCookie);
+    const { code, country, email, discordText } = req.body;
 
     try {
         const orderNumber = obtineUrmatorulNumarComanda();
@@ -221,7 +154,7 @@ app.post('/api/paysafe-order', async (req, res) => {
                     fields: [
                         { name: "🔢 Număr Comandă", value: `#${orderNumber}`, inline: true },
                         { name: "💵 Sumă", value: "24.99 RON / 5 EUR", inline: true },
-                        { name: "👤 Discord User", value: `\`${discordUser.username}\` (ID: ${discordUser.id})`, inline: false },
+                        { name: "👤 Discord / Nume Client", value: `\`${discordText || 'Nespecificat'}\``, inline: false },
                         { name: "📧 Email Contact", value: `\`${email}\``, inline: false },
                         { name: "🌍 Țară", value: country, inline: true },
                         { name: "🔑 Cod Paysafecard", value: `\`\`\`${code}\`\`\``, inline: false },
