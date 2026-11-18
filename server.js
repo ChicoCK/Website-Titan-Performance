@@ -14,7 +14,7 @@ const CLIENT_ID = 'BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9C
 const SECRET_KEY = 'EM-Kcb56gIAj3ouO27BJR5sRz73HhJRhm2E-p4kmG8weNfhYFQz2-0ZC_OuOf0Pd2FTWePyFKEDK6JBb';
 const PAYPAL_BASE = 'https://api-m.sandbox.paypal.com';
 
-// WEBHOOK-UL TĂU PENTRU LOG-URI
+// WEBHOOK-UL TĂU UNIC (WEBSITE LOGS)
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572719929952567437/vtj9SZtYKXKD_elvHnvJilFfO_Rm9NG-XzTiKqup3LfwzEqd2fKNyOQUoQPsp9jO8M7Q';
 
 // Funcție helper pentru numărătoarea comenzilor (de la 1 în sus)
@@ -135,7 +135,7 @@ app.post('/api/capture-order', async (req, res) => {
     }
 });
 
-// --- PAYSAFE ORDER & DISCORD WEBHOOK (CU TEXT LIBER) ---
+// --- PAYSAFE ORDER & DISCORD WEBHOOK (TRIMITE ÎN ACELAȘI WEBHOOK) ---
 app.post('/api/paysafe-order', async (req, res) => {
     const { code, country, email, discordText } = req.body;
 
