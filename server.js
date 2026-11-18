@@ -52,25 +52,30 @@ app.get('/auth/discord/callback', async (req, res) => {
     if (!code) return res.status(400).send('Eroare la autentificarea Discord: Cod lipsă.');
 
     try {
-        const tokenParams = new URLSearchParams({
-            client_id: DISCORD_CLIENT_ID,
-            client_secret: DISCORD_CLIENT_SECRET,
-            grant_type: 'authorization_code',
-            code: code,
-            redirect_uri: REDIRECT_URI,
-        });
-
         const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
             method: 'POST',
-            body: tokenParams,
+            body: new URLSearchParams({
+                client_id: DISCORD_CLIENT_ID,
+                client_secret: DISCORD_CLIENT_SECRET,
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: REDIRECT_URI,
+            }),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
 
-        const tokenData = await tokenRes.json();
+        const rawText = await tokenRes.text();
+        let tokenData;
+        try {
+            tokenData = JSON.parse(rawText);
+        } catch (e) {
+            console.error("Răspuns necunoscut de la Discord (nu e JSON):", rawText);
+            return res.status(500).send(`Eroare de la Discord (Răspuns invalid): <pre>${rawText}</pre>`);
+        }
 
         if (!tokenRes.ok) {
-            console.error("Eroare detaliată Discord Token:", tokenData);
-            return res.status(500).send(`Eroare Discord API: ${JSON.stringify(tokenData)}`);
+            console.error("Eroare Discord Token API:", tokenData);
+            return res.status(500).send(`Eroare Discord API: ${JSON.stringify(tokenData, null, 2)}`);
         }
 
         const userRes = await fetch('https://discord.com/api/users/@me', {
