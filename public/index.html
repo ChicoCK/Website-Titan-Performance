@@ -277,31 +277,40 @@
 
             <!-- Butoanele principale de plată -->
             <div id="metode-plata" class="space-y-3">
-                <!-- Buton PayPal curat -->
+                <!-- Buton PayPal curat (fără butonul de debit/credit card din SDK) -->
                 <div id="paypal-button-container"></div>
 
-                <!-- Linie dreaptă sub butonul PayPal -->
+                <!-- Buton Credit Card (Stripe API) -->
+                <button type="button" id="stripe-pay-btn" onclick="platesteCuStripe()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 text-sm">
+                    <span>💳</span>
+                    <span>Plătește cu Cardul (Stripe)</span>
+                </button>
+
+                <!-- Linie dreaptă -->
                 <hr class="border-t border-blue-900/50 my-4 w-full">
 
                 <!-- Buton Paysafecard -->
-                <button onclick="arataFormularPaysafe()" class="w-full bg-[#111827] hover:bg-gray-800 border border-blue-500/50 text-white font-semibold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md text-sm">
+                <button type="button" onclick="arataFormularPaysafe()" class="w-full bg-[#111827] hover:bg-gray-800 border border-blue-500/50 text-white font-semibold py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md text-sm">
                     <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                     Plătește cu Paysafecard
                 </button>
             </div>
 
-            <!-- Rezultat Cheie PayPal -->
-            <div id="rezultat-cheie" class="hidden mt-4 p-4 bg-green-950/50 border border-green-500 rounded-xl text-green-300 text-sm">
+            <!-- Rezultat Cheie & Loader (PayPal / Stripe) -->
+            <div id="rezultat-cheie" class="hidden mt-4 p-4 bg-green-950/50 border border-green-500 rounded-xl text-green-300 text-sm space-y-3">
                 <p class="font-bold mb-1">🎉 Plată Confirmată!</p>
-                <p>Cheia ta de licență:</p>
-                <input type="text" id="cheie-licenta" readonly class="w-full mt-2 bg-black text-white p-2 rounded text-center font-mono text-xs border border-green-700">
+                <p class="text-xs">Cheia ta de licență:</p>
+                <input type="text" id="cheie-licenta" readonly class="w-full bg-black text-white p-2 rounded text-center font-mono text-xs border border-green-700">
+                <a id="link-loader" href="https://titanperformance.xyz/download/loader.exe" target="_blank" class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center transition-all">
+                    ⬇ Descarcă Loader (Titan Performance)
+                </a>
             </div>
 
             <!-- Formular Paysafe -->
             <div id="paysafe-container" class="hidden mt-4 text-left transition-all">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-sm font-bold text-blue-400">Plată Manuală Paysafecard</span>
-                    <button onclick="inchideFormularPaysafe()" class="text-xs text-gray-400 hover:text-white underline">Înapoi</button>
+                    <button type="button" onclick="inchideFormularPaysafe()" class="text-xs text-gray-400 hover:text-white underline">Înapoi</button>
                 </div>
 
                 <div class="mb-4 p-3 bg-yellow-950/40 border border-yellow-600/50 rounded-xl text-yellow-300 text-xs">
@@ -399,7 +408,7 @@
     </div>
 
     <!-- Scripturi -->
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9CcxOp1sFUFyempEDsrNWdY&currency=EUR"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAu8R_BEXsln3dPZpZXcNUPuvDBRIIy2b1pStBKBShVkP7KiJcT9N9Cext9CcxOp1sFUFyempEDsrNWdY&currency=EUR&disable-funding=card"></script>
     <script>
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1572746851122155614/ikr9OpTSS8YPT-5twte6EL-qph4ded877HhYoS4XlY9FOziDDTPcgGhGYZnBx7CIy5oL';
 
@@ -430,7 +439,104 @@
         document.getElementById('metode-plata').style.display = 'block';
         }
 
+        function afiseazaCheieSiLoader(licenseKey, loaderUrl) {
+        document.getElementById('metode-plata').style.display = 'none';
+        document.getElementById('paysafe-container').classList.add('hidden');
+        document.getElementById('rezultat-cheie').classList.remove('hidden');
+        document.getElementById('cheie-licenta').value = licenseKey;
+        if (loaderUrl) {
+        document.getElementById('link-loader').href = loaderUrl;
+        }
+        }
+
+        // Stripe Checkout Session init
+        async function platesteCuStripe() {
+        const btn = document.getElementById('stripe-pay-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳</span><span>Se redirecționează către Stripe...</span>';
+
+        try {
+        const res = await fetch('/api/create-stripe-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+
+        if (data.success && data.url) {
+        window.location.href = data.url;
+        } else {
+        alert(data.message || "Eroare la inițializarea plății Stripe.");
+        btn.disabled = false;
+        btn.innerHTML = '<span>💳</span><span>Plătește cu Cardul (Stripe)</span>';
+        }
+        } catch (err) {
+        console.error(err);
+        alert("Eroare de conexiune la Stripe.");
+        btn.disabled = false;
+        btn.innerHTML = '<span>💳</span><span>Plătește cu Cardul (Stripe)</span>';
+        }
+        }
+
+        // Verificare automată la întoarcerea de la Stripe
+        (async function verificaPlataStripeLaIntoarcere() {
+        const params = new URLSearchParams(window.location.search);
+        const sessionId = params.get('stripe_session_id');
+        const canceled = params.get('stripe_canceled');
+
+        if (canceled === 'true') {
+        alert("Plata cu cardul prin Stripe a fost anulată.");
+        return;
+        }
+
+        if (!sessionId) return;
+
+        try {
+        const res = await fetch('/api/verify-stripe-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId })
+        });
+        const details = await res.json();
+
+        if (details.success) {
+        afiseazaCheieSiLoader(details.licenseKey, details.loaderUrl);
+
+        if (!details.alreadyDelivered) {
+        await fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        content: "@everyone",
+        allowed_mentions: { parse: ["everyone"] },
+        embeds: [{
+        title: `💳 Comandă Nouă Card (Stripe) #${details.orderNumber} Confirmată!`,
+        color: 5763719,
+        fields: [
+        { name: "🔢 Număr Comandă", value: `#${details.orderNumber}`, inline: true },
+        { name: "💳 Metodă", value: "Credit Card (Stripe API)", inline: true },
+        { name: "📧 Email Client", value: `\`${details.customerEmail || 'Nespecificat'}\``, inline: false },
+        { name: "🆔 ID Sesiune Stripe", value: `\`${details.sessionId}\``, inline: false },
+        { name: "🔑 Cheie Atribuită", value: `\`${details.licenseKey}\``, inline: false },
+        { name: "📦 Stoc Rămas", value: `${details.remainingStock} chei disponibile`, inline: true }
+        ],
+        timestamp: new Date().toISOString()
+        }]
+        })
+        });
+        }
+
+        document.getElementById('pachete').scrollIntoView({ behavior: 'smooth' });
+        } else {
+        alert(details.message || "Nu s-a putut confirma plata Stripe.");
+        }
+        } catch (err) {
+        console.error(err);
+        alert("Eroare la verificarea plății Stripe.");
+        }
+        })();
+
         paypal.Buttons({
+        fundingSource: paypal.FUNDING.PAYPAL,
         createOrder: function(data, actions) {
         return fetch('/api/create-order', {
         method: 'post',
@@ -444,9 +550,7 @@
         body: JSON.stringify({ orderID: data.orderID })
         }).then(res => res.json()).then(async details => {
         if(details.success) {
-        document.getElementById('metode-plata').style.display = 'none';
-        document.getElementById('rezultat-cheie').classList.remove('hidden');
-        document.getElementById('cheie-licenta').value = details.licenseKey;
+        afiseazaCheieSiLoader(details.licenseKey, details.loaderUrl);
 
         // Trimite webhook-ul direct din browser
         await fetch(DISCORD_WEBHOOK_URL, {
