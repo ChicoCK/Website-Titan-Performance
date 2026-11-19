@@ -170,24 +170,27 @@ app.post('/api/create-stripe-session', async (req, res) => {
     try {
         const origin = req.headers.origin || 'https://titanperformance.xyz';
 
-        const session = await stripe.checkout.sessions.create({
-            mode: 'payment',
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'eur',
-                        product_data: {
-                            name: 'Titan Performance — Lifetime License',
-                            description: 'Licență Lifetime pentru optimizare PC, Kernel Tweaks, Input Delay & FPS Boost.'
-                        },
-                        unit_amount: 500 // 5.00 EUR în cenți
-                    },
-                    quantity: 1
-                }
-            ],
-            success_url: `${origin}/buy?stripe_session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${origin}/buy?canceled=true`
-        });
+const session = await stripe.checkout.sessions.create({
+    mode: 'payment',
+    managed_payments: {
+        enabled: false
+    },
+    line_items: [
+        {
+            price_data: {
+                currency: 'eur',
+                product_data: {
+                    name: 'Titan Performance — Lifetime License',
+                    description: 'Licență Lifetime pentru optimizare PC, Kernel Tweaks, Input Delay & FPS Boost.'
+                },
+                unit_amount: 500 // 5.00 EUR în cenți
+            },
+            quantity: 1
+        }
+    ],
+    success_url: `${origin}/?stripe_session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/?stripe_canceled=true`
+});
 
         res.json({ success: true, url: session.url, id: session.id });
     } catch (error) {
