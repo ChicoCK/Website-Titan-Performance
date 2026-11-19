@@ -171,7 +171,6 @@ app.post('/api/create-stripe-session', async (req, res) => {
         const origin = req.headers.origin || 'https://titanperformance.xyz';
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
             mode: 'payment',
             line_items: [
                 {
