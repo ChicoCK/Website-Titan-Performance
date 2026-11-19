@@ -19,7 +19,7 @@ const PAYPAL_BASE = 'https://api-m.sandbox.paypal.com';
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '';
 const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
 
-const LOADER_URL = 'https://titanperformance.xyz/download/loader.exe';
+const LOADER_URL = 'https://store-eu-par-2.gofile.io/download/web/d0913c66-6614-4efd-90ae-24644d8ed334/Titan-Performance-Setup.exe';
 
 // Funcție helper pentru numărătoarea comenzilor (de la 1 în sus)
 function obtineUrmatorulNumarComanda() {
